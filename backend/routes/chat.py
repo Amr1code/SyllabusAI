@@ -17,11 +17,18 @@ class ChatRequest(BaseModel):
 
 @router.post("/chat")
 async def chat(req: ChatRequest):
+    if not req.session_id or not req.session_id.strip():
+        raise HTTPException(status_code=400, detail="session_id is required.")
+    if not req.question or not req.question.strip():
+        raise HTTPException(status_code=400, detail="question is required.")
+
     syllabus = load_syllabus(req.session_id)
     if not syllabus:
         raise HTTPException(status_code=400, detail="Syllabus not uploaded yet for this session.")
 
     topics = syllabus.get("topics_covered", [])
+    if not topics:
+        raise HTTPException(status_code=400, detail="No topics found in syllabus. Please re-upload.")
 
     topic_check = client.embeddings.create(
         model="text-embedding-3-small",

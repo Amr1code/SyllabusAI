@@ -37,4 +37,25 @@ def extract_syllabus(raw_text: str) -> dict:
     if content.startswith("```"):
         content = content.split("\n", 1)[1]
         content = content.rsplit("```", 1)[0]
-    return json.loads(content)
+
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        data = {
+            "course_name": "",
+            "professor": "",
+            "topics_covered": [],
+            "weekly_schedule": {},
+            "textbook": "",
+        }
+
+    for key, default in [
+        ("course_name", ""),
+        ("professor", ""),
+        ("topics_covered", []),
+        ("weekly_schedule", {}),
+        ("textbook", ""),
+    ]:
+        data.setdefault(key, default)
+
+    return data
