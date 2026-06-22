@@ -17,6 +17,8 @@ if "textbook_uploaded" not in st.session_state:
     st.session_state.textbook_uploaded = False
 if "topics" not in st.session_state:
     st.session_state.topics = []
+if "course_name" not in st.session_state:
+    st.session_state.course_name = ""
 
 with st.sidebar:
     st.header("Upload Course Materials")
@@ -34,6 +36,7 @@ with st.sidebar:
             result = resp.json()
             st.session_state.syllabus_uploaded = True
             st.session_state.topics = result.get("topics_covered", [])
+            st.session_state.course_name = result.get("course_name", "")
             st.success(f"Syllabus uploaded: {result.get('course_name', 'Unknown Course')}")
         else:
             st.error(f"Error: {resp.text}")
@@ -59,10 +62,18 @@ with st.sidebar:
         for topic in st.session_state.topics:
             st.write(f"- {topic}")
 
-st.title("Student Tutoring Agent")
+if st.session_state.course_name:
+    st.title(f"Tutor: {st.session_state.course_name}")
+else:
+    st.title("Student Tutoring Agent")
 
 if not st.session_state.syllabus_uploaded or not st.session_state.textbook_uploaded:
-    st.info("Please upload both your syllabus and textbook in the sidebar to start chatting.")
+    missing = []
+    if not st.session_state.syllabus_uploaded:
+        missing.append("syllabus")
+    if not st.session_state.textbook_uploaded:
+        missing.append("textbook")
+    st.info(f"Please upload your {' and '.join(missing)} in the sidebar to start chatting.")
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):

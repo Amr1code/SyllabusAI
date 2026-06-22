@@ -53,7 +53,8 @@ async def chat(req: ChatRequest):
     except Exception:
         raise HTTPException(status_code=400, detail="Textbook not uploaded yet for this session.")
 
-    messages = build_prompt(topics, chunks, req.question)
+    course_name = syllabus.get("course_name", "")
+    messages = build_prompt(topics, chunks, req.question, course_name)
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=messages,
