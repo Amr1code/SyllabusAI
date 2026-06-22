@@ -42,18 +42,34 @@ with st.sidebar:
             st.error(f"Error: {resp.text}")
 
     st.subheader("2. Textbook")
-    textbook_file = st.file_uploader("Upload your textbook (PDF)", type=["pdf"], key="textbook")
-    if textbook_file and not st.session_state.textbook_uploaded:
-        with st.spinner("Processing textbook (this may take a minute)..."):
+    textbook_files = st.file_uploader(
+        "Upload your textbook (PDFs or ZIP of PDFs)",
+        type=["pdf", "zip"],
+        accept_multiple_files=True,
+        key="textbook",
+    )
+    if textbook_files and not st.session_state.textbook_uploaded:
+        with st.spinner("Processing textbook files (this may take a minute)..."):
+            upload_files = [
+                ("files", (f.name, f.getvalue(), "application/octet-stream"))
+                for f in textbook_files
+            ]
             resp = requests.post(
                 f"{API_URL}/upload-textbook",
-                files={"file": (textbook_file.name, textbook_file.getvalue(), "application/pdf")},
+                files=upload_files,
                 data={"session_id": st.session_state.session_id},
             )
         if resp.status_code == 200:
             result = resp.json()
             st.session_state.textbook_uploaded = True
-            st.success(f"Textbook uploaded: {result.get('chunks_stored', 0)} chunks indexed")
+            total = result.get("total_chunks_stored", 0)
+            file_results = result.get("files", [])
+            st.success(f"Textbook uploaded: {total} chunks indexed from {len(file_results)} file(s)")
+            for fr in file_results:
+                if fr["status"] == "success":
+                    st.caption(f"  {fr['filename']}: {fr['chunks_stored']} chunks")
+                else:
+                    st.caption(f"  {fr['filename']}: {fr.get('detail', 'skipped')}")
         else:
             st.error(f"Error: {resp.text}")
 
