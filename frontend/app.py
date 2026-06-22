@@ -5,7 +5,7 @@ import streamlit as st
 
 API_URL = "http://localhost:8000"
 
-st.set_page_config(page_title="Student Tutoring Agent", layout="wide")
+st.set_page_config(page_title="SyllabusAI", layout="wide")
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
@@ -65,7 +65,7 @@ with st.sidebar:
 if st.session_state.course_name:
     st.title(f"Tutor: {st.session_state.course_name}")
 else:
-    st.title("Student Tutoring Agent")
+    st.title("SyllabusAI")
 
 if not st.session_state.syllabus_uploaded or not st.session_state.textbook_uploaded:
     missing = []

@@ -1,4 +1,4 @@
-# Student Tutoring Agent
+# SyllabusAI
 
 A document-grounded AI tutoring agent. Students upload their course syllabus and textbook as PDFs, then ask questions in a chat interface. The agent **only** answers questions about topics listed in the syllabus, using **only** content from the textbook — it never draws on outside knowledge.
 

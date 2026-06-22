@@ -9,7 +9,7 @@ from backend.routes.chat import router as chat_router
 from backend.routes.upload_syllabus import router as syllabus_router
 from backend.routes.upload_textbook import router as textbook_router
 
-app = FastAPI(title="Student Tutoring Agent")
+app = FastAPI(title="SyllabusAI")
 
 app.add_middleware(
     CORSMiddleware,
