@@ -3,7 +3,7 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 from backend.pipeline.retriever import retrieve_chunks
-from backend.prompt.builder import build_prompt
+from backend.prompt.builder import build_prompt, build_general_knowledge_prompt
 from backend.storage.session_store import load_syllabus
 
 router = APIRouter()
@@ -45,15 +45,27 @@ async def chat(req: ChatRequest):
             similarity = dot / (mag_q * mag_t)
             max_similarity = max(max_similarity, similarity)
 
+    course_name = syllabus.get("course_name", "")
+
     if max_similarity < 0.3:
-        return {"answer": "That topic is not in your course material."}
+        messages = build_general_knowledge_prompt(req.question, course_name)
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            temperature=0,
+        )
+        answer = (
+            "**Note: This topic is not covered in your course material. "
+            "The following answer is based on general knowledge, not your syllabus or textbook.**\n\n"
+            + response.choices[0].message.content
+        )
+        return {"answer": answer}
 
     try:
         chunks = retrieve_chunks(req.question, req.session_id)
     except Exception:
         raise HTTPException(status_code=400, detail="Textbook not uploaded yet for this session.")
 
-    course_name = syllabus.get("course_name", "")
     messages = build_prompt(topics, chunks, req.question, course_name)
     response = client.chat.completions.create(
         model="gpt-4o",
