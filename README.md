@@ -8,6 +8,15 @@ A RAG-powered (Retrieval-Augmented Generation) AI tutoring agent. Students uploa
 2. **Upload a textbook** — The PDF is parsed, split into 500-token chunks (with 50-token overlap), embedded with `text-embedding-3-small`, and stored in a Chroma vector database.
 3. **Ask a question** — The agent first checks whether the question is related to a syllabus topic using embedding cosine similarity. If the topic is out of scope, it refuses. If in scope, it retrieves the 5 most relevant textbook chunks and sends them alongside a strict system prompt to GPT-4o, which generates an answer grounded entirely in the provided context.
 
+## Demo
+<img width="1911" height="947" alt="Image" src="https://github.com/user-attachments/assets/94956b46-a3f3-447e-b56d-b9961edb4a2e" />
+
+<img width="1913" height="951" alt="Image" src="https://github.com/user-attachments/assets/751b8305-63cc-4b6c-a473-fbbba2ccc694" />
+
+<img width="1916" height="951" alt="Image" src="https://github.com/user-attachments/assets/9303e377-cae1-43a0-b0e2-a44e7fd97b61" />
+
+<img width="1916" height="951" alt="Image" src="https://github.com/user-attachments/assets/2180a3f4-87bc-49d5-b824-ddf7bdde8019" />
+
 ## Architecture
 
 ```
