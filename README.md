@@ -14,7 +14,7 @@ A RAG-powered (Retrieval-Augmented Generation) AI tutoring agent. Students uploa
 <img width="1913" height="951" alt="Image" src="https://github.com/user-attachments/assets/751b8305-63cc-4b6c-a473-fbbba2ccc694" />
 
 <img width="1916" height="951" alt="Image" src="https://github.com/user-attachments/assets/9303e377-cae1-43a0-b0e2-a44e7fd97b61" />
-
+-When a user asks for something that isn't in the content or syllabus:
 <img width="1916" height="951" alt="Image" src="https://github.com/user-attachments/assets/2180a3f4-87bc-49d5-b824-ddf7bdde8019" />
 
 ## Architecture
